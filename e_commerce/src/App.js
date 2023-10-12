@@ -76,7 +76,7 @@ const [cart, setCart] = useState({});
         
       </Route>
       <Route exact path='/checkout'>
-      <Route index element={<Checkout/>}/>
+      <Route index element={<Checkout cart={cart}/>}/>
       </Route>
 
       </Routes>
