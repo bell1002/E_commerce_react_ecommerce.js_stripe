@@ -32,7 +32,7 @@ function Cart({cart, handleUpdateCartQty,handleRemoveFromCart,handleEmptyCart}){
     )
     return(
         <Container>
-            <Typography variant="h4" className="mb-3">Your Shooping Cart</Typography>
+            <Typography variant="h4" className="mt-5">Your Shooping Cart</Typography>
             {isEmpty ? <EmptyCart/> : <FilledCart/>}
         </Container>
     )

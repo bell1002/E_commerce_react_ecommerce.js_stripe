@@ -11,8 +11,9 @@ import { Outlet } from '@mui/icons-material';
 
 function App() {
   const [products, setProducts] = useState([]);
-const [cart, setCart] = useState({});
-
+  const [cart, setCart] = useState({});
+  const [order,setOrder] = useState({});
+  const [errorMessage, setErrorMessage] = useState('');
   const fetchProducts = async () =>{
     const {data} = await commerce.products.list();
 
@@ -28,7 +29,6 @@ const [cart, setCart] = useState({});
     const item = await commerce.cart.add(product_id, quantity);
 
     setCart(item);
-    console.log(item);
   }
   const handleUpdateCartQty =async (product_id, quantity) =>{
     const cart= await commerce.cart.update(product_id, {quantity});
@@ -44,6 +44,23 @@ const [cart, setCart] = useState({});
     const cart= await commerce.cart.empty();
 
     setCart(cart);
+  }
+
+  const refreshCart = async () =>{
+    const newCart= await commerce.cart.refresh();
+
+    setCart(newCart);
+  }
+
+  const hanldeCaptureCheckout = async (checkoutTokenId, newOrder)=>{
+    try{
+      const incomingOrder = await commerce.checkout.capture(checkoutTokenId,newOrder);
+      setOrder(incomingOrder);
+      refreshCart();
+    }
+    catch(error){
+      setErrorMessage(error.data.error.message);
+    }
   }
   
   useEffect(()=>{
@@ -76,7 +93,9 @@ const [cart, setCart] = useState({});
         
       </Route>
       <Route exact path='/checkout'>
-      <Route index element={<Checkout cart={cart}/>}/>
+      <Route index element={<Checkout cart={cart} order={order} onCaptureCheckout={hanldeCaptureCheckout} error={errorMessage}
+
+      />}/>
       </Route>
 
       </Routes>
